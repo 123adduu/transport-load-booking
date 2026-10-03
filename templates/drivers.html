@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Driver Management - Transport Load Booking System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold mb-1" id="drivers_heading">Driver Management &amp; Registration</h2>
+        <p class="text-muted">Register certified commercial heavy vehicle drivers, verify licence validity, and track driver availability.</p>
+    </div>
+</div>
+
+<!-- Inline Alerts with exact IDs required for testing -->
+{% if success_message %}
+<div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert" id="driver_success_message">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    <span>{{ success_message }}</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+{% if error_message %}
+<div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert" id="driver_error_message">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <span>{{ error_message }}</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+<div class="row g-4">
+    <!-- Registration Form -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-header bg-white py-3 border-0">
+                <h5 class="fw-bold mb-0 text-success">
+                    <i class="bi bi-person-plus me-2"></i>Register New Driver
+                </h5>
+            </div>
+            <div class="card-body pt-0">
+                <form method="POST" action="{{ url_for('drivers.list_and_register') }}" id="driver_registration_form" novalidate>
+                    <!-- Driver Name -->
+                    <div class="mb-3">
+                        <label for="driver_name" class="form-label fw-semibold">Driver Full Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="driver_name" name="driver_name" placeholder="e.g. Suresh Gowda" required>
+                    </div>
+
+                    <!-- Phone Number -->
+                    <div class="mb-3">
+                        <label for="driver_phone" class="form-label fw-semibold">Phone Number (10 Digits) <span class="text-danger">*</span></label>
+                        <input type="tel" class="form-control" id="driver_phone" name="phone_number" placeholder="e.g. 9876543210" maxlength="10" required>
+                        <div class="form-text small">Must contain exactly 10 numeric digits.</div>
+                    </div>
+
+                    <!-- Driving Licence Number -->
+                    <div class="mb-3">
+                        <label for="driver_licence" class="form-label fw-semibold">Driving Licence (DL) Number <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control text-uppercase" id="driver_licence" name="licence_number" placeholder="e.g. KA1920180004567" required>
+                        <div class="form-text small">Must be a unique commercial licence number.</div>
+                    </div>
+
+                    <!-- Licence Expiry Date -->
+                    <div class="mb-3">
+                        <label for="licence_expiry_date" class="form-label fw-semibold">Licence Expiry Date <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="licence_expiry_date" name="licence_expiry_date" required>
+                        <div class="form-text small">Must be a valid future date.</div>
+                    </div>
+
+                    <!-- Availability Status -->
+                    <div class="mb-4">
+                        <label for="driver_availability_status" class="form-label fw-semibold">Availability Status <span class="text-danger">*</span></label>
+                        <select class="form-select" id="driver_availability_status" name="availability_status" required>
+                            <option value="Available" selected>Available</option>
+                            <option value="Unavailable">Unavailable</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 py-2 fw-semibold" id="register_driver_button">
+                        <i class="bi bi-check-lg me-1"></i>Register Driver
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drivers List Table -->
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0 text-dark">
+                    <i class="bi bi-people me-2 text-success"></i>Registered Drivers
+                </h5>
+                <span class="badge bg-success rounded-pill px-3 py-2" id="drivers_total_badge">{{ drivers|length }} Drivers</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="drivers_table">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Driver Name</th>
+                            <th>Phone Number</th>
+                            <th>Licence Number</th>
+                            <th>Expiry Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if drivers %}
+                            {% for d in drivers %}
+                                <tr id="driver_row_{{ d.id }}">
+                                    <td>{{ loop.index }}</td>
+                                    <td class="fw-bold" id="driver_name_{{ d.id }}">{{ d.driver_name }}</td>
+                                    <td id="driver_phone_{{ d.id }}">{{ d.phone_number }}</td>
+                                    <td class="text-muted small" id="driver_licence_{{ d.id }}">{{ d.licence_number }}</td>
+                                    <td>{{ d.licence_expiry_date.strftime('%Y-%m-%d') }}</td>
+                                    <td>
+                                        <span class="badge {% if d.availability_status == 'Available' %}bg-success{% else %}bg-secondary{% endif %}" id="driver_status_{{ d.id }}">
+                                            {{ d.availability_status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{{ url_for('drivers.edit', id=d.id) }}" class="btn btn-outline-secondary" id="edit_driver_{{ d.id }}">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <form method="POST" action="{{ url_for('drivers.delete', id=d.id) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete driver {{ d.driver_name }}?');">
+                                                <button type="submit" class="btn btn-outline-danger" id="delete_driver_{{ d.id }}">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr id="empty_drivers_row">
+                                <td colspan="7" class="text-center py-4 text-muted">No drivers registered yet. Use the form to register a driver.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

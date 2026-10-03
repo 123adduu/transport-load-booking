@@ -1,0 +1,13 @@
+test_case_id,test_scenario,customer_name,customer_phone,material_type,pickup_location,destination,load_weight,required_vehicle_type,pickup_date,offered_price,expected_result,expected_message,test_type,priority
+TC_LP_01,Valid load posting with positive weight and price,Karnataka Steel Corp,9845112233,Steel,Mangaluru,Bengaluru,14.5,Truck,2026-10-15,35000,Success,successfully posted!,Positive,High
+TC_LP_02,Empty customer name,,9845112233,Steel,Mangaluru,Bengaluru,14.5,Truck,2026-10-15,35000,Failure,Customer name is required.,Negative,High
+TC_LP_03,Invalid customer phone - 8 digits,Anand Rao,98451122,Furniture,Udupi,Mysuru,2.5,Pickup,2026-10-15,8000,Failure,Customer phone number must contain exactly 10 digits.,Negative,High
+TC_LP_04,Empty pickup location,Canara Merchants,9845112233,Cement,,Bengaluru,12.0,Truck,2026-10-15,25000,Failure,Pickup location is required.,Negative,High
+TC_LP_05,Same pickup and destination location,Coastal Traders,9845112233,Cement,Mangaluru,Mangaluru,12.0,Truck,2026-10-15,25000,Failure,Pickup location and destination cannot be the same.,Negative,High
+TC_LP_06,Same pickup and destination with different casing and spaces,Coastal Traders,9845112233,Cement,  bengaluru ,Bengaluru  ,12.0,Truck,2026-10-15,25000,Failure,Pickup location and destination cannot be the same.,Boundary,High
+TC_LP_07,Zero load weight boundary check,Malnad Timber,9845112233,Furniture,Shivamogga,Hubballi,0,Mini Truck,2026-10-15,12000,Failure,Load weight must be a positive number greater than zero.,Boundary,High
+TC_LP_08,Negative load weight boundary check,Malnad Timber,9845112233,Furniture,Shivamogga,Hubballi,-3.5,Mini Truck,2026-10-15,12000,Failure,Load weight must be a positive number greater than zero.,Boundary,High
+TC_LP_09,Zero offered price boundary check,Hassan Agro Foods,9845112233,Food Grains,Hassan,Belagavi,8.0,Truck,2026-10-15,0,Failure,Offered price must be greater than zero.,Boundary,High
+TC_LP_10,Negative offered price boundary check,Hassan Agro Foods,9845112233,Food Grains,Hassan,Belagavi,8.0,Truck,2026-10-15,-1000,Failure,Offered price must be greater than zero.,Boundary,High
+TC_LP_11,Past pickup date boundary check,Belagavi Traders,9845112233,Textiles,Belagavi,Bengaluru,5.0,Mini Truck,2025-01-01,18000,Failure,Pickup date cannot be in the past.,Boundary,High
+TC_LP_12,Valid boundary - Small weight and today pickup date,Udupi Spices,9845112233,Food Grains,Udupi,Mangaluru,0.5,Pickup,2026-09-21,4500,Success,successfully posted!,Boundary,Medium

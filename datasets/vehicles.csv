@@ -1,0 +1,36 @@
+vehicle_number,vehicle_type,capacity,owner_name,registration_date,availability_status
+KA19AB1234,Truck,16.0,Mangaluru Coastal Carriers,2024-01-15,Available
+KA19CD5678,Mini Truck,3.5,Canara Express Cargo,2024-02-10,Available
+KA20EF9012,Trailer,28.0,Udupi Heavy Haulers,2023-11-05,Available
+KA01GH3456,Pickup,1.8,Bengaluru Metro Logistics,2024-03-01,Available
+KA09IJ7890,Truck,14.5,Mysuru Royal Transports,2023-09-20,Available
+KA14KL2345,Mini Truck,4.0,Malnad Freight Movers,2024-04-12,Available
+KA13MN6789,Truck,18.0,Hassan Agro Logistics,2023-12-18,Available
+KA25OP1234,Trailer,32.0,North Karnataka Heavy Transit,2023-08-14,Available
+KA22QR5678,Truck,15.0,Belagavi Border Cargo,2024-02-25,Available
+KA19ST9012,Pickup,2.0,Kudla Goods Express,2024-05-02,Available
+KA01UV3456,Truck,20.0,Silicon City Translines,2023-10-11,Available
+KA09WX7890,Trailer,30.0,Chamundi Heavy Fleet,2023-07-29,Available
+KA20YZ1234,Mini Truck,3.2,Karavali Fast Freight,2024-03-18,Available
+KA14AB5678,Truck,12.5,Sahyadri Roadways,2023-11-22,Available
+KA13CD9012,Pickup,1.5,Hassan Coffee Carriers,2024-04-30,Available
+KA25EF3456,Truck,16.5,Hubballi Junction Logistics,2024-01-08,Available
+KA22GH7890,Trailer,26.0,Kittur Express Haulage,2023-09-03,Available
+KA19IJ1234,Truck,10.0,Panambur Port Logistics,2024-02-14,Available
+KA01KL5678,Mini Truck,4.5,Whitefield Distribution,2024-05-15,Available
+KA09MN9012,Pickup,2.2,Heritage Cargo Lines,2024-03-22,Available
+KA20OP3456,Truck,22.0,Udupi Highway Transporters,2023-12-01,Available
+KA14QR7890,Trailer,35.0,Sharavathi Heavy Movers,2023-06-19,Available
+KA13ST1234,Mini Truck,3.8,Hassan Potato Express,2024-04-05,Available
+KA25UV5678,Pickup,1.7,Dharwad Pedha Cargo,2024-05-20,Available
+KA22WX9012,Truck,17.5,Belagavi Sugar Translines,2023-10-25,Available
+KA19YZ3456,Trailer,29.0,Dakshina Kannada Logistics,2023-08-30,Available
+KA01AA7890,Truck,15.5,Peenya Industrial Freight,2024-01-28,Available
+KA09BB1234,Mini Truck,4.2,Nanjangud Fast Movers,2024-02-17,Available
+KA20CC5678,Pickup,2.5,Kundapura Goods Service,2024-03-10,Available
+KA14DD9012,Truck,19.0,Bhadravathi Steel Transport,2023-11-14,Available
+KA13EE3456,Trailer,31.0,Western Ghats Haulers,2023-07-15,Available
+KA25FF7890,Truck,13.0,Hubballi Commercial Trans,2024-04-18,Available
+KA22GG1234,Mini Truck,3.6,Gokak Falls Freight,2024-05-08,Available
+KA19HH5678,Pickup,1.9,Mangalore Tile Transporters,2024-02-28,Available
+KA01II9012,Trailer,34.0,Outer Ring Road Logistics,2023-09-12,Available

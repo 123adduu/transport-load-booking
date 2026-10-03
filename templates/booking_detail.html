@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Booking Confirmation - {{ booking.booking_id }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <a href="{{ url_for('bookings.list_bookings') }}" class="btn btn-sm btn-outline-secondary mb-2" id="back_to_bookings_link">
+                    &larr; Back to All Bookings
+                </a>
+                <h2 class="fw-bold mb-0">Booking Confirmation Voucher</h2>
+            </div>
+            <div>
+                <button class="btn btn-outline-primary me-2" onclick="window.print()" id="btn_print_booking">
+                    <i class="bi bi-printer me-1"></i>Print Voucher
+                </button>
+                {% if booking.status == 'Confirmed' %}
+                    <form method="POST" action="{{ url_for('bookings.cancel_booking', id=booking.id) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to cancel this booking? The assigned vehicle and driver will be restored to Available.');">
+                        <button type="submit" class="btn btn-danger" id="cancel_booking_button">
+                            <i class="bi bi-x-circle me-1"></i>Cancel Booking
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card border-0 shadow rounded-3 overflow-hidden" id="booking_confirmation_card">
+            <!-- Card Header -->
+            <div class="card-header bg-primary text-white py-3 px-4 d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-uppercase small tracking-wide opacity-75">Transport Booking ID</span>
+                    <h3 class="fw-bold mb-0" id="booking_id_display">{{ booking.booking_id }}</h3>
+                </div>
+                <div>
+                    <span class="badge {% if booking.status == 'Confirmed' %}bg-success{% else %}bg-danger{% endif %} fs-6 px-3 py-2" id="booking_status_badge">
+                        {{ booking.status }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body p-4">
+                <div class="row g-4">
+                    <!-- Customer Information -->
+                    <div class="col-md-6 border-end-md">
+                        <h5 class="fw-bold text-primary mb-3">
+                            <i class="bi bi-person me-2"></i>Customer &amp; Consignor
+                        </h5>
+                        <div class="mb-2">
+                            <span class="text-muted small d-block">Customer Name</span>
+                            <span class="fw-bold fs-6" id="booking_customer_name">{{ booking.load.customer_name if booking.load else 'N/A' }}</span>
+                        </div>
+                        <div class="mb-2">
+                            <span class="text-muted small d-block">Customer Contact Phone</span>
+                            <span class="fw-semibold" id="booking_customer_phone">{{ booking.load.customer_phone if booking.load else 'N/A' }}</span>
+                        </div>
+                        <div class="mb-2">
+                            <span class="text-muted small d-block">Booking Creation Date</span>
+                            <span>{{ booking.booking_date.strftime('%d %b %Y, %I:%M %p') }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Route & Cargo Details -->
+                    <div class="col-md-6">
+                        <h5 class="fw-bold text-warning text-dark mb-3">
+                            <i class="bi bi-box-seam me-2 text-warning"></i>Freight Cargo Details
+                        </h5>
+                        <div class="mb-2" id="booking_load_details">
+                            <span class="text-muted small d-block">Transit Route</span>
+                            <span class="fw-bold" id="booking_route">
+                                {{ booking.load.pickup_location if booking.load else 'N/A' }} &rarr; {{ booking.load.destination if booking.load else 'N/A' }}
+                            </span>
+                        </div>
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <span class="text-muted small d-block">Material Commodity</span>
+                                <span class="fw-semibold" id="booking_material">{{ booking.load.material_type if booking.load else 'N/A' }}</span>
+                            </div>
+                            <div class="col-6">
+                                <span class="text-muted small d-block">Load Weight</span>
+                                <span class="fw-semibold" id="booking_weight">{{ booking.load.load_weight if booking.load else 'N/A' }} Tonnes</span>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <span class="text-muted small d-block">Pickup Date</span>
+                                <span>{{ booking.load.pickup_date.strftime('%Y-%m-%d') if booking.load else 'N/A' }}</span>
+                            </div>
+                            <div class="col-6">
+                                <span class="text-muted small d-block">Contract Freight Price</span>
+                                <span class="fw-bold text-success">&#8377;{{ '{:,.0f}'.format(booking.load.offered_price) if booking.load else '0' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12"><hr class="my-1"></div>
+
+                    <!-- Assigned Commercial Vehicle -->
+                    <div class="col-md-6 border-end-md">
+                        <h5 class="fw-bold text-primary mb-3">
+                            <i class="bi bi-truck me-2"></i>Assigned Transport Vehicle
+                        </h5>
+                        <div class="mb-2">
+                            <span class="text-muted small d-block">Vehicle Registration Number</span>
+                            <span class="fw-bold fs-5 text-primary" id="booking_vehicle_number">{{ booking.vehicle.vehicle_number if booking.vehicle else 'N/A' }}</span>
+                        </div>
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <span class="text-muted small d-block">Vehicle Type</span>
+                                <span class="fw-semibold">{{ booking.vehicle.vehicle_type if booking.vehicle else 'N/A' }}</span>
+                            </div>
+                            <div class="col-6">
+                                <span class="text-muted small d-block">Rated Payload Capacity</span>
+                                <span class="fw-semibold">{{ booking.vehicle.capacity if booking.vehicle else 'N/A' }} Tonnes</span>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <span class="text-muted small d-block">Vehicle Fleet Owner</span>
+                            <span>{{ booking.vehicle.owner_name if booking.vehicle else 'N/A' }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Assigned Professional Driver -->
+                    <div class="col-md-6">
+                        <h5 class="fw-bold text-success mb-3">
+                            <i class="bi bi-person-badge me-2"></i>Assigned Driver
+                        </h5>
+                        <div class="mb-2">
+                            <span class="text-muted small d-block">Driver Full Name</span>
+                            <span class="fw-bold fs-5" id="booking_driver_name">{{ booking.driver.driver_name if booking.driver else 'N/A' }}</span>
+                        </div>
+                        <div class="mb-2">
+                            <span class="text-muted small d-block">Mobile Contact</span>
+                            <span class="fw-semibold" id="booking_driver_phone">{{ booking.driver.phone_number if booking.driver else 'N/A' }}</span>
+                        </div>
+                        <div class="mb-2">
+                            <span class="text-muted small d-block">Driving Licence (DL)</span>
+                            <span class="font-monospace text-muted">{{ booking.driver.licence_number if booking.driver else 'N/A' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Footer -->
+            <div class="card-footer bg-light py-3 px-4 d-flex justify-content-between text-muted small">
+                <span>System Verified Commercial Dispatch Document</span>
+                <span>Generated by Transport Load Booking System</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

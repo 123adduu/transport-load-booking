@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Vehicle &amp; Driver Assignment - Transport Load Booking System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold mb-1" id="assignment_heading">Vehicle &amp; Driver Assignment</h2>
+        <p class="text-muted">Pair open freight loads with verified available vehicles and drivers. Enforces capacity sufficiency and double-booking prevention.</p>
+    </div>
+</div>
+
+<!-- Inline Alerts with exact IDs required for testing -->
+{% if success_message %}
+<div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert" id="assignment_success_message">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    <span>{{ success_message }}</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+{% if error_message %}
+<div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert" id="assignment_error_message">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <span>{{ error_message }}</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+<div class="row g-4 justify-content-center">
+    <!-- Assignment Card -->
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-header bg-white py-3 border-0">
+                <h5 class="fw-bold mb-0 text-primary">
+                    <i class="bi bi-arrow-left-right me-2"></i>Assign Resources to Open Freight Load
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('assignments.assign') }}" id="assignment_form" novalidate>
+                    <!-- Select Load -->
+                    <div class="mb-4">
+                        <label for="assignment_load_id" class="form-label fw-semibold">
+                            Select Open Freight Load <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select" id="assignment_load_id" name="load_id" required onchange="updateLoadDetails(this)">
+                            <option value="" disabled {% if not request.args.get('load_id') %}selected{% endif %}>-- Select Posted Load --</option>
+                            {% for l in loads %}
+                                <option value="{{ l.id }}" 
+                                        data-weight="{{ l.load_weight }}" 
+                                        data-vehicle="{{ l.required_vehicle_type }}" 
+                                        data-route="{{ l.pickup_location }} to {{ l.destination }}"
+                                        {% if request.args.get('load_id')|int == l.id %}selected{% endif %}>
+                                    Load #{{ l.id }}: {{ l.customer_name }} | {{ l.material_type }} | {{ l.pickup_location }} &rarr; {{ l.destination }} | Weight: {{ l.load_weight }}T | Req: {{ l.required_vehicle_type }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text small" id="load_hint">Only loads with status 'Posted' are listed.</div>
+                    </div>
+
+                    <!-- Select Vehicle -->
+                    <div class="mb-4">
+                        <label for="assignment_vehicle_id" class="form-label fw-semibold">
+                            Select Available Vehicle <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select" id="assignment_vehicle_id" name="vehicle_id" required onchange="updateVehicleDetails(this)">
+                            <option value="" disabled selected>-- Select Commercial Vehicle --</option>
+                            {% for v in vehicles %}
+                                <option value="{{ v.id }}" data-capacity="{{ v.capacity }}" data-type="{{ v.vehicle_type }}">
+                                    {{ v.vehicle_number }} - {{ v.vehicle_type }} (Capacity: {{ v.capacity }} Tonnes) - Owner: {{ v.owner_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text small" id="vehicle_hint">Only vehicles with 'Available' status are listed. Ensure capacity &ge; load weight.</div>
+                    </div>
+
+                    <!-- Select Driver -->
+                    <div class="mb-4">
+                        <label for="assignment_driver_id" class="form-label fw-semibold">
+                            Select Available Driver <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select" id="assignment_driver_id" name="driver_id" required>
+                            <option value="" disabled selected>-- Select Certified Driver --</option>
+                            {% for d in drivers %}
+                                <option value="{{ d.id }}">
+                                    {{ d.driver_name }} (Phone: {{ d.phone_number }} | DL: {{ d.licence_number }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text small">Only drivers with 'Available' status are listed.</div>
+                    </div>
+
+                    <!-- Live Capacity Verification Indicator -->
+                    <div class="p-3 mb-4 rounded-3 border bg-light d-none" id="capacity_check_container">
+                        <h6 class="fw-bold mb-2"><i class="bi bi-shield-check me-1"></i>Capacity Verification Check</h6>
+                        <div class="d-flex justify-content-between text-muted small mb-1">
+                            <span>Required Load Weight: <strong id="lbl_load_weight">-</strong></span>
+                            <span>Selected Vehicle Capacity: <strong id="lbl_vehicle_capacity">-</strong></span>
+                        </div>
+                        <div id="capacity_status_badge" class="mt-2"></div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold fs-6 shadow-sm" id="assign_button">
+                        <i class="bi bi-check2-circle me-1"></i>Confirm Assignment &amp; Generate Booking
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateLoadDetails(select) {
+    const opt = select.options[select.selectedIndex];
+    if (opt && opt.dataset.weight) {
+        document.getElementById('lbl_load_weight').innerText = opt.dataset.weight + ' Tonnes';
+        checkCapacity();
+    }
+}
+function updateVehicleDetails(select) {
+    const opt = select.options[select.selectedIndex];
+    if (opt && opt.dataset.capacity) {
+        document.getElementById('lbl_vehicle_capacity').innerText = opt.dataset.capacity + ' Tonnes';
+        checkCapacity();
+    }
+}
+function checkCapacity() {
+    const lSelect = document.getElementById('assignment_load_id');
+    const vSelect = document.getElementById('assignment_vehicle_id');
+    const container = document.getElementById('capacity_check_container');
+    const badge = document.getElementById('capacity_status_badge');
+
+    const lOpt = lSelect.options[lSelect.selectedIndex];
+    const vOpt = vSelect.options[vSelect.selectedIndex];
+
+    if (lOpt && lOpt.dataset.weight && vOpt && vOpt.dataset.capacity) {
+        container.classList.remove('d-none');
+        const weight = parseFloat(lOpt.dataset.weight);
+        const capacity = parseFloat(vOpt.dataset.capacity);
+        if (capacity >= weight) {
+            badge.innerHTML = '<span class="badge bg-success p-2"><i class="bi bi-check-circle me-1"></i>Sufficient Capacity: Vehicle (' + capacity + 'T) &ge; Load (' + weight + 'T)</span>';
+        } else {
+            badge.innerHTML = '<span class="badge bg-danger p-2"><i class="bi bi-x-circle me-1"></i>Insufficient Capacity: Vehicle (' + capacity + 'T) &lt; Load (' + weight + 'T)</span>';
+        }
+    }
+}
+// Run on load in case load_id was passed via query parameter
+document.addEventListener('DOMContentLoaded', function() {
+    const lSelect = document.getElementById('assignment_load_id');
+    if (lSelect.value) {
+        updateLoadDetails(lSelect);
+    }
+});
+</script>
+{% endblock %}

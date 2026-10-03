@@ -1,0 +1,12 @@
+test_case_id,test_scenario,vehicle_number,vehicle_type,capacity,owner_name,registration_date,availability_status,expected_result,expected_message,test_type,priority
+TC_VR_01,Valid vehicle registration - Truck,KA19XY1111,Truck,15.0,Kudla Express Lines,2026-09-01,Available,Success,Vehicle KA19XY1111 successfully registered!,Positive,High
+TC_VR_02,Valid vehicle registration - Mini Truck,KA01MN2222,Mini Truck,3.5,Metro Logistics,2026-09-05,Available,Success,Vehicle KA01MN2222 successfully registered!,Positive,High
+TC_VR_03,Empty vehicle number,,Truck,10.0,Anand Roadways,2026-09-10,Available,Failure,Vehicle number is required.,Negative,High
+TC_VR_04,Invalid vehicle number format - Missing digits,KA19AB,Truck,12.0,Coastal Haulage,2026-09-12,Available,Failure,Invalid Indian vehicle registration number format,Negative,High
+TC_VR_05,Invalid vehicle number format - Special characters,KA-19-AB-1234$,Truck,12.0,Coastal Haulage,2026-09-12,Available,Failure,Invalid Indian vehicle registration number format,Negative,Medium
+TC_VR_06,Duplicate vehicle number,KA19AB1234,Truck,16.0,Duplicate Owner,2026-09-15,Available,Failure,already registered,Negative,High
+TC_VR_07,Zero capacity boundary check,KA20CD3333,Trailer,0,Udupi Freight,2026-09-15,Available,Failure,Capacity must be greater than zero tonnes.,Boundary,High
+TC_VR_08,Negative capacity boundary check,KA20EF4444,Trailer,-5.0,Udupi Freight,2026-09-15,Available,Failure,Capacity must be greater than zero tonnes.,Boundary,High
+TC_VR_09,Smallest valid positive capacity boundary check,KA14GH5555,Pickup,0.1,Sahyadri Parcel,2026-09-18,Available,Success,Vehicle KA14GH5555 successfully registered!,Boundary,Medium
+TC_VR_10,Empty owner name,KA13IJ6666,Mini Truck,4.0,,2026-09-20,Available,Failure,Owner name is required.,Negative,Medium
+TC_VR_11,Valid vehicle registration - Trailer with high capacity,KA25KL7777,Trailer,40.0,North Karnataka Trans,2026-09-22,Available,Success,Vehicle KA25KL7777 successfully registered!,Positive,Medium

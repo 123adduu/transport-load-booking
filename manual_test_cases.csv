@@ -1,0 +1,95 @@
+Test Case ID,Module,Test Scenario,Preconditions,Test Steps,Test Data,Expected Result,Actual Result,Status,Priority
+TC_MAN_01,Vehicle Registration,Verify successful registration with valid inputs,User is on Vehicles page,"1. Enter valid vehicle number
+2. Select vehicle type
+3. Enter capacity > 0
+4. Enter owner name
+5. Enter registration date
+6. Click Register Vehicle","KA19AB1234, Truck, 16.0T, Ramesh Transport, 2024-01-15",Success alert displayed; record added to table,,,High
+TC_MAN_02,Vehicle Registration,Verify validation on empty vehicle number,User is on Vehicles page,"1. Leave vehicle number empty
+2. Fill remaining fields
+3. Click Register",Empty vehicle number,Validation error: 'Vehicle number is required.',,,High
+TC_MAN_03,Vehicle Registration,Verify validation on non-Indian format vehicle number,User is on Vehicles page,"1. Enter invalid string 'XYZ-123'
+2. Click Register",XYZ-123,Error: 'Invalid Indian vehicle registration number format',,,High
+TC_MAN_04,Vehicle Registration,Verify rejection of duplicate vehicle number,Vehicle KA19AB1234 already registered,"1. Enter existing vehicle number 'KA19AB1234'
+2. Submit form",KA19AB1234,Error: 'Vehicle number KA19AB1234 is already registered.',,,High
+TC_MAN_05,Vehicle Registration,Boundary: Zero capacity validation,User is on Vehicles page,"1. Enter capacity '0'
+2. Submit form",Capacity = 0,Error: 'Capacity must be greater than zero tonnes.',,,High
+TC_MAN_06,Vehicle Registration,Boundary: Negative capacity validation,User is on Vehicles page,"1. Enter capacity '-5.5'
+2. Submit form",Capacity = -5.5,Error: 'Capacity must be greater than zero tonnes.',,,High
+TC_MAN_07,Vehicle Registration,Boundary: Minimum positive capacity (0.1T),User is on Vehicles page,"1. Enter capacity '0.1'
+2. Submit form",Capacity = 0.1,Vehicle registered successfully,,,Medium
+TC_MAN_08,Vehicle Registration,Verify edit vehicle details,Vehicle exists in database,"1. Click Edit icon on vehicle row
+2. Modify owner name
+3. Click Save Changes",New owner name,Vehicle details updated successfully in list,,,Medium
+TC_MAN_09,Vehicle Registration,Verify vehicle deletion with no active booking,Vehicle has no active booking,"1. Click Delete button
+2. Confirm alert dialog",Vehicle ID,Vehicle removed from table,,,Medium
+TC_MAN_10,Driver Registration,Verify driver registration with valid details,User is on Drivers page,"1. Enter driver name
+2. Enter 10-digit phone
+3. Enter unique licence
+4. Select future expiry date
+5. Click Register Driver","Suresh Rao, 9845011223, KA1920150001001, 2029-05-20",Driver registered successfully and shown in table,,,High
+TC_MAN_11,Driver Registration,Verify phone number with less than 10 digits,User is on Drivers page,"1. Enter 9-digit phone number
+2. Click Register",984501122,Error: 'Phone number must contain exactly 10 digits.',,,High
+TC_MAN_12,Driver Registration,Verify phone number with more than 10 digits,User is on Drivers page,"1. Enter 11-digit phone number
+2. Click Register",98450112233,Error: 'Phone number must contain exactly 10 digits.',,,High
+TC_MAN_13,Driver Registration,Verify duplicate driver phone number rejection,Driver with phone 9845011223 exists,"1. Enter phone 9845011223
+2. Fill valid other details
+3. Click Register",Phone 9845011223,Error: 'Phone number is already registered',,,High
+TC_MAN_14,Driver Registration,Verify duplicate licence number rejection,Driver with DL KA1920150001001 exists,"1. Enter DL KA1920150001001
+2. Submit",DL KA1920150001001,Error: 'Licence number is already registered',,,High
+TC_MAN_15,Driver Registration,Boundary: Past licence expiry date rejection,User is on Drivers page,"1. Enter expiry date '2023-01-01'
+2. Submit",Expiry: 2023-01-01,Error: 'Licence expiry date must be a future date.',,,High
+TC_MAN_16,Driver Registration,Boundary: Today date as expiry date rejection,User is on Drivers page,"1. Enter current date
+2. Submit",Expiry: Today,Error: 'Licence expiry date must be a future date.',,,Medium
+TC_MAN_17,Load Posting,Verify posting load with valid inputs,User is on Loads page,"1. Enter customer name
+2. Enter 10-digit phone
+3. Select material
+4. Enter pickup & destination
+5. Enter weight > 0
+6. Select vehicle
+7. Enter future date & price
+8. Click Post Load","Cement, Mangaluru to Bengaluru, 15T, Price 32000",Load posted successfully and status displayed as Posted,,,High
+TC_MAN_18,Load Posting,Verify validation when pickup equals destination,User is on Loads page,"1. Enter Pickup = 'Mangaluru'
+2. Enter Destination = 'Mangaluru'
+3. Submit","Pickup=Mangaluru, Dest=Mangaluru",Error: 'Pickup location and destination cannot be the same.',,,High
+TC_MAN_19,Load Posting,Boundary: Same pickup and destination case-insensitive,User is on Loads page,"1. Enter Pickup = 'bengaluru'
+2. Enter Destination = 'BENGALURU'
+3. Submit","Pickup=bengaluru, Dest=BENGALURU",Error: 'Pickup location and destination cannot be the same.',,,High
+TC_MAN_20,Load Posting,Boundary: Zero and negative load weight,User is on Loads page,"1. Enter weight '0' or '-5'
+2. Submit",Weight <= 0,Error: 'Load weight must be a positive number greater than zero.',,,High
+TC_MAN_21,Load Posting,Boundary: Past pickup date rejection,User is on Loads page,"1. Enter pickup date '2025-01-01'
+2. Submit",Date: 2025-01-01,Error: 'Pickup date cannot be in the past.',,,High
+TC_MAN_22,Load Posting,Boundary: Zero or negative offered price rejection,User is on Loads page,"1. Enter price <= 0
+2. Submit",Price: 0 or -100,Error: 'Offered price must be greater than zero.',,,High
+TC_MAN_23,Load Search,Verify search filter by pickup location,Multiple loads exist,"1. Enter 'Mangaluru' in Pickup Location
+2. Click Search",Pickup: Mangaluru,Table displays only loads originating from Mangaluru,,,High
+TC_MAN_24,Load Search,Verify search filter by weight range,Loads of varying weights exist,"1. Enter Min Weight = 10, Max Weight = 20
+2. Click Search",Weight: 10 - 20T,Only loads with weight between 10T and 20T displayed,,,Medium
+TC_MAN_25,Load Search,Verify 'No matching loads found' message,User is on Search page,"1. Enter non-existent keyword in Pickup Location
+2. Click Search",Pickup: NonExistentPlace999,'No matching loads found' message container displayed,,,High
+TC_MAN_26,Vehicle & Driver Assignment,Verify successful assignment when capacity >= weight,"Load (15T), Vehicle (16T Available), Driver (Available)","1. Select Load #1
+2. Select Vehicle (16T)
+3. Select Driver
+4. Click Confirm Assignment","Load 15T, Vehicle 16T","Booking generated, redirected to Confirmation voucher",,,High
+TC_MAN_27,Vehicle & Driver Assignment,Boundary: Vehicle capacity strictly equal to load weight,"Load (15T), Vehicle (15T Available), Driver (Available)","1. Select Load (15T)
+2. Select Vehicle (15T)
+3. Select Driver
+4. Click Confirm Assignment","Load 15T, Vehicle 15T",Assignment successful and Confirmed,,,High
+TC_MAN_28,Vehicle & Driver Assignment,Verify rejection when vehicle capacity < load weight,"Load (20T), Vehicle (12T Available), Driver (Available)","1. Select Load (20T)
+2. Select Vehicle (12T)
+3. Submit assignment","Load 20T, Vehicle 12T",Error: 'Insufficient vehicle capacity: Vehicle capacity is less than load weight.',,,High
+TC_MAN_29,Vehicle & Driver Assignment,Verify vehicle and driver status update to Unavailable,Successful assignment made,"1. Check Vehicles table
+2. Check Drivers table",Assigned vehicle & driver,Both statuses show 'Unavailable',,,High
+TC_MAN_30,Vehicle & Driver Assignment,Verify double-booking prevention of assigned vehicle,Vehicle already assigned to active booking,1. Try assigning same vehicle to another load,Assigned Vehicle,Unavailable in dropdown or rejected with error,,,High
+TC_MAN_31,Booking Confirmation,Verify voucher details display accurately,Booking has been confirmed,"1. Open Booking Confirmation voucher
+2. Inspect customer, load, vehicle, and driver fields",Booking ID,All details match database record exactly,,,High
+TC_MAN_32,Booking Cancellation,Verify cancellation resets vehicle and driver status,Active booking exists,"1. Click Cancel Booking button
+2. Confirm dialog",Active Booking,"Booking status becomes 'Cancelled', vehicle & driver become 'Available'",,,High
+TC_MAN_33,Booking Registry,"Verify booking filter tabs (All, Confirmed, Cancelled)",Both Confirmed and Cancelled bookings exist,"1. Click 'Confirmed' tab
+2. Click 'Cancelled' tab",Filter tabs,Table filters correctly according to selected status,,,Medium
+TC_MAN_34,Dataset Import,Verify importing valid vehicles CSV,vehicles.csv file available,"1. Go to Import Dataset page
+2. Select Vehicles
+3. Choose CSV
+4. Click Import",vehicles.csv,Success alert with imported and skipped counts,,,High
+TC_MAN_35,Dataset Import,Verify error handling on invalid/corrupted CSV structure,Invalid CSV with missing columns,"1. Upload CSV with missing columns
+2. Click Import",Corrupted CSV,Error alert: 'Missing required columns in CSV',,,High

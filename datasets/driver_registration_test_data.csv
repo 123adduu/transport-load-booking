@@ -1,0 +1,11 @@
+test_case_id,test_scenario,driver_name,phone_number,licence_number,licence_expiry_date,availability_status,expected_result,expected_message,test_type,priority
+TC_DR_01,Valid driver registration with future licence expiry,Ramesh Poojary,9886012345,KA1920210009999,2029-12-31,Available,Success,Driver Ramesh Poojary successfully registered!,Positive,High
+TC_DR_02,Empty driver name,,9886023456,KA1920210008888,2029-12-31,Available,Failure,Driver name is required.,Negative,High
+TC_DR_03,Invalid phone number - Less than 10 digits (9 digits),Ravi Kumar,988601234,KA1920210007777,2029-12-31,Available,Failure,Phone number must contain exactly 10 digits.,Negative,High
+TC_DR_04,Invalid phone number - More than 10 digits (11 digits),Sunil Gowda,98860123456,KA1920210006666,2029-12-31,Available,Failure,Phone number must contain exactly 10 digits.,Negative,High
+TC_DR_05,Duplicate phone number registration,Kiran Hegde,9845011223,KA1920210005555,2029-12-31,Available,Failure,Phone number 9845011223 is already registered,Negative,High
+TC_DR_06,Duplicate licence number registration,Mahesh Alva,9886034567,KA1920150001001,2029-12-31,Available,Failure,already registered,Negative,High
+TC_DR_07,Expired licence date boundary check - Past date,Gopal Shetty,9886045678,KA1920210004444,2022-01-01,Available,Failure,Licence expiry date must be a future date.,Boundary,High
+TC_DR_08,Expired licence date boundary check - Today date,Pradeep Rai,9886056789,KA1920210003333,2026-09-19,Available,Failure,Licence expiry date must be a future date.,Boundary,High
+TC_DR_09,Valid boundary future date - Tomorrow date,Vinod Nayak,9886067890,KA1920210002222,2029-12-31,Available,Success,Driver Vinod Nayak successfully registered!,Boundary,Medium
+TC_DR_10,Empty licence number,Arun Kumar,9886078901,,2029-12-31,Available,Failure,Driving licence number is required.,Negative,High

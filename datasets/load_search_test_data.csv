@@ -1,0 +1,9 @@
+test_case_id,test_scenario,pickup_location,destination,material_type,required_vehicle_type,min_weight,max_weight,load_status,expected_result,expected_message,test_type,priority
+TC_LS_01,Search by pickup location - Mangaluru,Mangaluru,,,,,,,Results_Found,Mangaluru,Positive,High
+TC_LS_02,Search by destination - Bengaluru,,Bengaluru,,,,,,Results_Found,Bengaluru,Positive,High
+TC_LS_03,Search by material type - Cement,,,Cement,,,,,Results_Found,Cement,Positive,High
+TC_LS_04,Search by required vehicle type - Trailer,,,,Trailer,,,,Results_Found,Trailer,Positive,Medium
+TC_LS_05,Search by weight range - 10 to 20 tonnes,,,,,10.0,20.0,,Results_Found,10 to 20,Boundary,High
+TC_LS_06,Search with no matching records - Non-existent location,KashmirValleys123,,,,,,,No_Results,No matching loads found,Negative,High
+TC_LS_07,Search with impossible weight filter - Min 100 Tonnes,,,,,100.0,200.0,,No_Results,No matching loads found,Boundary,Medium
+TC_LS_08,Search by status - Posted,,,,,,,Posted,Results_Found,Posted,Positive,Medium

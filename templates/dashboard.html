@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Transport Load Booking System{% endblock %}
+
+{% block content %}
+<div class="row mb-4 align-items-center">
+    <div class="col-md-8">
+        <h2 class="fw-bold mb-1" id="dashboard_heading">Logistics Operations Dashboard</h2>
+        <p class="text-muted mb-0">Live operational overview of commercial fleet, registered drivers, posted loads, and bookings.</p>
+    </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="{{ url_for('assignments.assign') }}" class="btn btn-primary shadow-sm me-2" id="btn_quick_assign">
+            <i class="bi bi-arrow-left-right me-1"></i>New Assignment
+        </a>
+        <a href="{{ url_for('loads.list_and_post') }}" class="btn btn-outline-primary shadow-sm" id="btn_quick_post_load">
+            <i class="bi bi-plus-circle me-1"></i>Post Load
+        </a>
+    </div>
+</div>
+
+<!-- Metrics Cards -->
+<div class="row g-3 mb-4">
+    <!-- Vehicles Card -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card stat-card border-0 shadow-sm rounded-3 h-100 border-start border-primary border-4" id="card_vehicles_metric">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-muted fw-semibold">Commercial Vehicles</span>
+                    <div class="stat-icon bg-primary-subtle text-primary p-2 rounded-3">
+                        <i class="bi bi-truck fs-4"></i>
+                    </div>
+                </div>
+                <div class="d-flex align-items-baseline">
+                    <h3 class="fw-bold mb-0 me-2" id="total_vehicles_count">{{ total_vehicles }}</h3>
+                    <span class="text-muted small">Total</span>
+                </div>
+                <div class="mt-2 pt-2 border-top d-flex justify-content-between text-muted small">
+                    <span>Available: <strong class="text-success" id="available_vehicles_count">{{ available_vehicles }}</strong></span>
+                    <span>Unavailable: <strong>{{ total_vehicles - available_vehicles }}</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drivers Card -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card stat-card border-0 shadow-sm rounded-3 h-100 border-start border-success border-4" id="card_drivers_metric">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-muted fw-semibold">Licensed Drivers</span>
+                    <div class="stat-icon bg-success-subtle text-success p-2 rounded-3">
+                        <i class="bi bi-person-badge fs-4"></i>
+                    </div>
+                </div>
+                <div class="d-flex align-items-baseline">
+                    <h3 class="fw-bold mb-0 me-2" id="total_drivers_count">{{ total_drivers }}</h3>
+                    <span class="text-muted small">Total</span>
+                </div>
+                <div class="mt-2 pt-2 border-top d-flex justify-content-between text-muted small">
+                    <span>Available: <strong class="text-success" id="available_drivers_count">{{ available_drivers }}</strong></span>
+                    <span>Unavailable: <strong>{{ total_drivers - available_drivers }}</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loads Card -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card stat-card border-0 shadow-sm rounded-3 h-100 border-start border-warning border-4" id="card_loads_metric">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-muted fw-semibold">Freight Loads</span>
+                    <div class="stat-icon bg-warning-subtle text-warning p-2 rounded-3">
+                        <i class="bi bi-box-seam fs-4"></i>
+                    </div>
+                </div>
+                <div class="d-flex align-items-baseline">
+                    <h3 class="fw-bold mb-0 me-2" id="total_loads_count">{{ total_loads }}</h3>
+                    <span class="text-muted small">Total</span>
+                </div>
+                <div class="mt-2 pt-2 border-top d-flex justify-content-between text-muted small">
+                    <span>Posted (Open): <strong class="text-primary" id="posted_loads_count">{{ posted_loads }}</strong></span>
+                    <span>Assigned: <strong class="text-secondary" id="assigned_loads_count">{{ assigned_loads }}</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bookings Card -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card stat-card border-0 shadow-sm rounded-3 h-100 border-start border-info border-4" id="card_bookings_metric">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-muted fw-semibold">Total Bookings</span>
+                    <div class="stat-icon bg-info-subtle text-info p-2 rounded-3">
+                        <i class="bi bi-calendar-check fs-4"></i>
+                    </div>
+                </div>
+                <div class="d-flex align-items-baseline">
+                    <h3 class="fw-bold mb-0 me-2" id="total_bookings_count">{{ total_bookings }}</h3>
+                    <span class="text-muted small">Total</span>
+                </div>
+                <div class="mt-2 pt-2 border-top d-flex justify-content-between text-muted small">
+                    <span>Confirmed: <strong class="text-success" id="active_bookings_count">{{ active_bookings }}</strong></span>
+                    <span>Cancelled: <strong class="text-danger" id="cancelled_bookings_count">{{ cancelled_bookings }}</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Module Navigation Links -->
+<div class="row g-3 mb-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm rounded-3 p-3 bg-white">
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+                <span class="fw-bold text-muted me-2"><i class="bi bi-grid-3x3-gap me-1"></i>Quick Navigation:</span>
+                <a href="{{ url_for('vehicles.list_and_register') }}" class="btn btn-sm btn-light border" id="btn_quick_register_vehicle">
+                    <i class="bi bi-truck me-1"></i>Vehicle Management
+                </a>
+                <a href="{{ url_for('drivers.list_and_register') }}" class="btn btn-sm btn-light border" id="btn_quick_register_driver">
+                    <i class="bi bi-person-badge me-1"></i>Driver Management
+                </a>
+                <a href="{{ url_for('loads.list_and_post') }}" class="btn btn-sm btn-light border" id="btn_quick_loads_list">
+                    <i class="bi bi-box-seam me-1"></i>Load Posting
+                </a>
+                <a href="{{ url_for('search.search_loads') }}" class="btn btn-sm btn-light border" id="btn_quick_search">
+                    <i class="bi bi-search me-1"></i>Load Search
+                </a>
+                <a href="{{ url_for('assignments.assign') }}" class="btn btn-sm btn-light border" id="btn_quick_assign_module">
+                    <i class="bi bi-arrow-left-right me-1"></i>Vehicle &amp; Driver Assignment
+                </a>
+                <a href="{{ url_for('bookings.list_bookings') }}" class="btn btn-sm btn-light border" id="btn_quick_bookings">
+                    <i class="bi bi-calendar-check me-1"></i>View All Bookings
+                </a>
+                <a href="{{ url_for('import_data.import_csv') }}" class="btn btn-sm btn-light border" id="btn_quick_import">
+                    <i class="bi bi-cloud-upload me-1"></i>Import Dataset
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tables Overview -->
+<div class="row g-4">
+    <!-- Recent Bookings -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-3 h-100">
+            <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-clock-history me-2 text-primary"></i>Recent Bookings</h5>
+                <a href="{{ url_for('bookings.list_bookings') }}" class="btn btn-sm btn-link text-decoration-none">View All &rarr;</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="recent_bookings_table">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Vehicle</th>
+                            <th>Driver</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if recent_bookings %}
+                            {% for b in recent_bookings %}
+                                <tr id="recent_booking_row_{{ b.id }}">
+                                    <td class="fw-semibold text-primary">{{ b.booking_id }}</td>
+                                    <td>{{ b.vehicle.vehicle_number if b.vehicle else 'N/A' }}</td>
+                                    <td>{{ b.driver.driver_name if b.driver else 'N/A' }}</td>
+                                    <td>
+                                        <span class="badge {% if b.status == 'Confirmed' %}bg-success{% else %}bg-danger{% endif %}">
+                                            {{ b.status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('bookings.booking_detail', booking_id=b.booking_id) }}" class="btn btn-sm btn-outline-primary py-0 px-2" id="view_recent_booking_{{ b.id }}">
+                                            View
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-3">No bookings recorded yet.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Open Loads -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-3 h-100">
+            <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-box me-2 text-warning"></i>Recent Loads</h5>
+                <a href="{{ url_for('loads.list_and_post') }}" class="btn btn-sm btn-link text-decoration-none">View All &rarr;</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="recent_loads_table">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Customer</th>
+                            <th>Route</th>
+                            <th>Weight</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if recent_loads %}
+                            {% for l in recent_loads %}
+                                <tr id="recent_load_row_{{ l.id }}">
+                                    <td class="fw-semibold">{{ l.customer_name }}</td>
+                                    <td><small>{{ l.pickup_location }} &rarr; {{ l.destination }}</small></td>
+                                    <td>{{ l.load_weight }} T</td>
+                                    <td>
+                                        <span class="badge {% if l.load_status == 'Posted' %}bg-primary{% elif l.load_status == 'Assigned' %}bg-secondary{% else %}bg-info{% endif %}">
+                                            {{ l.load_status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-3">No loads posted yet.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

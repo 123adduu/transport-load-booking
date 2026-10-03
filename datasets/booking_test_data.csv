@@ -1,0 +1,7 @@
+test_case_id,test_scenario,load_weight,vehicle_capacity,vehicle_status,driver_status,expected_result,expected_message,test_type,priority
+TC_BK_01,Valid assignment - Vehicle capacity greater than load weight,10.0,16.0,Available,Available,Success,successfully created and confirmed,Positive,High
+TC_BK_02,Boundary assignment - Vehicle capacity exactly equal to load weight,15.0,15.0,Available,Available,Success,successfully created and confirmed,Boundary,High
+TC_BK_03,Invalid assignment - Vehicle capacity strictly less than load weight,20.0,12.0,Available,Available,Failure,Insufficient vehicle capacity,Negative,High
+TC_BK_04,Invalid assignment - Selected vehicle is currently Unavailable,10.0,16.0,Unavailable,Available,Failure,currently Unavailable,Negative,High
+TC_BK_05,Invalid assignment - Selected driver is currently Unavailable,10.0,16.0,Available,Unavailable,Failure,currently Unavailable,Negative,High
+TC_BK_06,Booking cancellation - Restores vehicle and driver availability,8.0,15.0,Assigned,Assigned,Success,has been cancelled. Vehicle and Driver are now Available,Positive,High

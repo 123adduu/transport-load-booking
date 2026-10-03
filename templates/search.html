@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}Search Freight Loads - Transport Load Booking System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold mb-1" id="search_heading">Load Search &amp; Route Matching</h2>
+        <p class="text-muted">Filter and search posted freight loads by route origin, destination, commodity material, weight limits, and status.</p>
+    </div>
+</div>
+
+<!-- Search Filters Card -->
+<div class="card border-0 shadow-sm rounded-3 mb-4">
+    <div class="card-header bg-white py-3 border-0">
+        <h5 class="fw-bold mb-0 text-primary">
+            <i class="bi bi-funnel me-2"></i>Filter Criteria
+        </h5>
+    </div>
+    <div class="card-body pt-0">
+        <form method="GET" action="{{ url_for('search.search_loads') }}" id="load_search_form">
+            <div class="row g-3">
+                <!-- Pickup Location -->
+                <div class="col-md-4">
+                    <label for="search_pickup_location" class="form-label fw-semibold">Pickup Location</label>
+                    <input type="text" class="form-control" id="search_pickup_location" name="pickup_location" value="{{ pickup }}" placeholder="e.g. Mangaluru">
+                </div>
+
+                <!-- Destination -->
+                <div class="col-md-4">
+                    <label for="search_destination" class="form-label fw-semibold">Destination</label>
+                    <input type="text" class="form-control" id="search_destination" name="destination" value="{{ destination }}" placeholder="e.g. Bengaluru">
+                </div>
+
+                <!-- Material Type -->
+                <div class="col-md-4">
+                    <label for="search_material_type" class="form-label fw-semibold">Material Type</label>
+                    <select class="form-select" id="search_material_type" name="material_type">
+                        <option value="">-- All Materials --</option>
+                        <option value="Cement" {% if material == 'Cement' %}selected{% endif %}>Cement</option>
+                        <option value="Steel" {% if material == 'Steel' %}selected{% endif %}>Steel</option>
+                        <option value="Electronics" {% if material == 'Electronics' %}selected{% endif %}>Electronics</option>
+                        <option value="Furniture" {% if material == 'Furniture' %}selected{% endif %}>Furniture</option>
+                        <option value="Food Grains" {% if material == 'Food Grains' %}selected{% endif %}>Food Grains</option>
+                        <option value="Textiles" {% if material == 'Textiles' %}selected{% endif %}>Textiles</option>
+                        <option value="Machinery" {% if material == 'Machinery' %}selected{% endif %}>Machinery</option>
+                    </select>
+                </div>
+
+                <!-- Vehicle Type -->
+                <div class="col-md-3">
+                    <label for="search_vehicle_type" class="form-label fw-semibold">Required Vehicle</label>
+                    <select class="form-select" id="search_vehicle_type" name="required_vehicle_type">
+                        <option value="">-- All Vehicle Types --</option>
+                        <option value="Truck" {% if vehicle_type == 'Truck' %}selected{% endif %}>Truck</option>
+                        <option value="Mini Truck" {% if vehicle_type == 'Mini Truck' %}selected{% endif %}>Mini Truck</option>
+                        <option value="Trailer" {% if vehicle_type == 'Trailer' %}selected{% endif %}>Trailer</option>
+                        <option value="Pickup" {% if vehicle_type == 'Pickup' %}selected{% endif %}>Pickup</option>
+                    </select>
+                </div>
+
+                <!-- Min Weight -->
+                <div class="col-md-3">
+                    <label for="search_min_weight" class="form-label fw-semibold">Min Weight (Tonnes)</label>
+                    <input type="number" step="0.1" class="form-control" id="search_min_weight" name="min_weight" value="{{ min_weight }}" placeholder="Min Tonnes">
+                </div>
+
+                <!-- Max Weight -->
+                <div class="col-md-3">
+                    <label for="search_max_weight" class="form-label fw-semibold">Max Weight (Tonnes)</label>
+                    <input type="number" step="0.1" class="form-control" id="search_max_weight" name="max_weight" value="{{ max_weight }}" placeholder="Max Tonnes">
+                </div>
+
+                <!-- Load Status -->
+                <div class="col-md-3">
+                    <label for="search_load_status" class="form-label fw-semibold">Load Status</label>
+                    <select class="form-select" id="search_load_status" name="load_status">
+                        <option value="">-- All Statuses --</option>
+                        <option value="Posted" {% if status == 'Posted' %}selected{% endif %}>Posted (Open)</option>
+                        <option value="Assigned" {% if status == 'Assigned' %}selected{% endif %}>Assigned</option>
+                        <option value="Completed" {% if status == 'Completed' %}selected{% endif %}>Completed</option>
+                        <option value="Cancelled" {% if status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+                <a href="{{ url_for('search.search_loads') }}" class="btn btn-outline-secondary" id="reset_search_button">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
+                </a>
+                <button type="submit" class="btn btn-primary px-4 fw-semibold" id="search_button">
+                    <i class="bi bi-search me-1"></i>Search Loads
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Search Results Table Card -->
+<div class="card border-0 shadow-sm rounded-3">
+    <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold mb-0 text-dark">
+            <i class="bi bi-list-check me-2 text-primary"></i>Search Results
+        </h5>
+        <span class="badge bg-primary rounded-pill px-3 py-2" id="search_results_count">{{ loads|length }} Results</span>
+    </div>
+    <div class="card-body p-0">
+        {% if loads %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="search_results_table">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Customer</th>
+                            <th>Route</th>
+                            <th>Material</th>
+                            <th>Weight</th>
+                            <th>Vehicle Type</th>
+                            <th>Pickup Date</th>
+                            <th>Offered Price</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for l in loads %}
+                            <tr id="search_result_row_{{ l.id }}">
+                                <td>{{ loop.index }}</td>
+                                <td class="fw-semibold" id="result_customer_{{ l.id }}">{{ l.customer_name }}</td>
+                                <td>
+                                    <div class="fw-semibold" id="result_route_{{ l.id }}">{{ l.pickup_location }} &rarr; {{ l.destination }}</div>
+                                </td>
+                                <td>{{ l.material_type }}</td>
+                                <td id="result_weight_{{ l.id }}">{{ l.load_weight }} T</td>
+                                <td>{{ l.required_vehicle_type }}</td>
+                                <td>{{ l.pickup_date.strftime('%Y-%m-%d') }}</td>
+                                <td class="fw-bold">&#8377;{{ '{:,.0f}'.format(l.offered_price) }}</td>
+                                <td>
+                                    <span class="badge {% if l.load_status == 'Posted' %}bg-primary{% elif l.load_status == 'Assigned' %}bg-secondary{% else %}bg-info{% endif %}" id="result_status_{{ l.id }}">
+                                        {{ l.load_status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if l.load_status == 'Posted' %}
+                                        <a href="{{ url_for('assignments.assign') }}?load_id={{ l.id }}" class="btn btn-sm btn-primary py-0 px-2" id="assign_load_btn_{{ l.id }}">
+                                            Assign
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted small">Locked</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <!-- Exact required message ID when no results match -->
+            <div class="p-5 text-center" id="no_loads_found_message">
+                <div class="mb-3">
+                    <i class="bi bi-search text-muted fs-1"></i>
+                </div>
+                <h5 class="fw-bold text-secondary">No matching loads found</h5>
+                <p class="text-muted mb-0">Try modifying your filter parameters, searching with broader keywords, or resetting filters.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+instance/
+*.db
+*.sqlite3
+.vscode/
+.pytest_cache/
+.coverage
+htmlcov/
+test_results/
+test_results.zip

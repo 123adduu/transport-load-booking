@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Import Datasets - Transport Load Booking System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold mb-1" id="import_heading">Import CSV Datasets</h2>
+        <p class="text-muted">Batch import master datasets for vehicles, drivers, or loads with structural column validation and duplicate rejection.</p>
+    </div>
+</div>
+
+<!-- Inline Alerts with exact IDs required for testing -->
+{% if success_message %}
+<div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert" id="import_success_message">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    <span>{{ success_message }}</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+{% if error_message %}
+<div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert" id="import_error_message">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <span>{{ error_message }}</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-header bg-white py-3 border-0">
+                <h5 class="fw-bold mb-0 text-primary">
+                    <i class="bi bi-file-earmark-arrow-up me-2"></i>Upload Dataset CSV
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('import_data.import_csv') }}" enctype="multipart/form-data" id="csv_import_form">
+                    <!-- Dataset Type -->
+                    <div class="mb-3">
+                        <label for="import_dataset_type" class="form-label fw-semibold">Target Dataset Type <span class="text-danger">*</span></label>
+                        <select class="form-select" id="import_dataset_type" name="dataset_type" required>
+                            <option value="" disabled selected>-- Select Dataset Type --</option>
+                            <option value="vehicles">Commercial Vehicles (vehicles.csv)</option>
+                            <option value="drivers">Licensed Drivers (drivers.csv)</option>
+                            <option value="loads">Freight Loads (loads.csv)</option>
+                        </select>
+                    </div>
+
+                    <!-- CSV File Input -->
+                    <div class="mb-4">
+                        <label for="import_csv_file" class="form-label fw-semibold">Select CSV File <span class="text-danger">*</span></label>
+                        <input class="form-control" type="file" id="import_csv_file" name="csv_file" accept=".csv" required>
+                        <div class="form-text small">Only UTF-8 encoded .csv files are supported.</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold" id="import_button">
+                        <i class="bi bi-cloud-upload me-1"></i>Validate &amp; Import Dataset
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        {% if errors_list %}
+            <div class="card border-0 shadow-sm rounded-3 mt-4 border-start border-danger border-4">
+                <div class="card-header bg-white py-2 border-0">
+                    <h6 class="fw-bold text-danger mb-0"><i class="bi bi-exclamation-octagon me-1"></i>Import Warnings / Validation Errors</h6>
+                </div>
+                <div class="card-body py-2">
+                    <ul class="mb-0 small text-danger ps-3" id="import_errors_list">
+                        {% for err in errors_list[:10] %}
+                            <li>{{ err }}</li>
+                        {% endfor %}
+                        {% if errors_list|length > 10 %}
+                            <li>... and {{ errors_list|length - 10 }} more issues</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Instructions Column -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-3 bg-white">
+            <div class="card-header bg-white py-3 border-0">
+                <h5 class="fw-bold mb-0 text-dark">
+                    <i class="bi bi-info-circle me-2 text-info"></i>Expected CSV Schemas
+                </h5>
+            </div>
+            <div class="card-body">
+                <h6 class="fw-bold text-primary">1. Vehicles CSV</h6>
+                <p class="small text-muted font-monospace">vehicle_number, vehicle_type, capacity, owner_name, registration_date, availability_status</p>
+
+                <h6 class="fw-bold text-success mt-3">2. Drivers CSV</h6>
+                <p class="small text-muted font-monospace">driver_name, phone_number, licence_number, licence_expiry_date, availability_status</p>
+
+                <h6 class="fw-bold text-warning text-dark mt-3">3. Loads CSV</h6>
+                <p class="small text-muted font-monospace">customer_name, customer_phone, material_type, pickup_location, destination, load_weight, required_vehicle_type, pickup_date, offered_price, load_status</p>
+
+                <div class="alert alert-light border mt-4 mb-0 small">
+                    <i class="bi bi-lightbulb text-warning me-1"></i>
+                    <strong>Automated Deduplication:</strong> Existing vehicle numbers, driver phones/licences, and identical load consignments will be safely skipped to avoid duplicate insertion.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

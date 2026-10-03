@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Driver - Transport Load Booking System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-header bg-white py-3 border-0">
+                <h5 class="fw-bold mb-0 text-success">
+                    <i class="bi bi-pencil-square me-2"></i>Edit Driver: {{ driver.driver_name }}
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if error_message %}
+                <div class="alert alert-danger" id="edit_driver_error_message">
+                    {{ error_message }}
+                </div>
+                {% endif %}
+
+                <form method="POST" action="{{ url_for('drivers.edit', id=driver.id) }}">
+                    <div class="mb-3">
+                        <label for="edit_driver_name" class="form-label fw-semibold">Driver Name</label>
+                        <input type="text" class="form-control" id="edit_driver_name" name="driver_name" value="{{ driver.driver_name }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_driver_phone" class="form-label fw-semibold">Phone Number (10 Digits)</label>
+                        <input type="tel" class="form-control" id="edit_driver_phone" name="phone_number" value="{{ driver.phone_number }}" maxlength="10" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_driver_licence" class="form-label fw-semibold">Licence Number</label>
+                        <input type="text" class="form-control text-uppercase" id="edit_driver_licence" name="licence_number" value="{{ driver.licence_number }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_licence_expiry_date" class="form-label fw-semibold">Licence Expiry Date</label>
+                        <input type="date" class="form-control" id="edit_licence_expiry_date" name="licence_expiry_date" value="{{ driver.licence_expiry_date.strftime('%Y-%m-%d') }}" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="edit_driver_availability_status" class="form-label fw-semibold">Availability Status</label>
+                        <select class="form-select" id="edit_driver_availability_status" name="availability_status" required>
+                            <option value="Available" {% if driver.availability_status == 'Available' %}selected{% endif %}>Available</option>
+                            <option value="Unavailable" {% if driver.availability_status == 'Unavailable' %}selected{% endif %}>Unavailable</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('drivers.list_and_register') }}" class="btn btn-outline-secondary" id="btn_cancel_edit_driver">Cancel</a>
+                        <button type="submit" class="btn btn-success" id="btn_save_driver">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

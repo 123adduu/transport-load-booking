@@ -1,0 +1,56 @@
+customer_name,customer_phone,material_type,pickup_location,destination,load_weight,required_vehicle_type,pickup_date,offered_price,load_status
+Karnataka Cement Corp,9880011223,Cement,Mangaluru,Bengaluru,15.0,Truck,2026-10-01,32000.0,Posted
+Peenya Electronics Ltd,9880022334,Electronics,Bengaluru,Mysuru,3.0,Mini Truck,2026-10-02,12000.0,Posted
+Bhadravathi Steel Works,9880033445,Steel,Shivamogga,Hubballi,25.0,Trailer,2026-10-03,45000.0,Posted
+Kudla Wooden Furniture,9880044556,Furniture,Mangaluru,Udupi,1.8,Pickup,2026-10-01,6500.0,Posted
+Mysuru Silk & Textiles,9880055667,Textiles,Mysuru,Bengaluru,4.0,Mini Truck,2026-10-04,14000.0,Posted
+Hassan Agro Produce,9880066778,Food Grains,Hassan,Mangaluru,14.0,Truck,2026-10-02,24000.0,Posted
+Belagavi Foundries,9880077889,Steel,Belagavi,Hubballi,18.0,Truck,2026-10-05,26000.0,Posted
+Hubballi Cotton Mills,9880088990,Textiles,Hubballi,Bengaluru,20.0,Trailer,2026-10-03,38000.0,Posted
+Udupi Food Spices,9880099001,Food Grains,Udupi,Shivamogga,3.5,Mini Truck,2026-10-06,11000.0,Posted
+Coastal Tiles & Ceramics,9148011223,Cement,Mangaluru,Hassan,12.0,Truck,2026-10-04,21000.0,Posted
+Bengaluru Office Decors,9148022334,Furniture,Bengaluru,Belagavi,8.0,Truck,2026-10-07,29000.0,Posted
+Dharwad Transformers,9148033445,Electronics,Hubballi,Mangaluru,16.0,Truck,2026-10-02,33000.0,Posted
+Shivamogga Iron Ores,9148044556,Steel,Shivamogga,Bengaluru,30.0,Trailer,2026-10-05,52000.0,Posted
+Belagavi Sugar Refineries,9148055667,Food Grains,Belagavi,Mangaluru,22.0,Truck,2026-10-03,36000.0,Posted
+Mysuru Timber Yards,9148066778,Furniture,Mysuru,Hassan,2.0,Pickup,2026-10-08,7500.0,Posted
+Udupi Solar Systems,9148077889,Electronics,Udupi,Bengaluru,5.0,Mini Truck,2026-10-04,17000.0,Posted
+Mangaluru Fish Feeds,9148088990,Food Grains,Mangaluru,Mysuru,10.0,Truck,2026-10-06,22000.0,Posted
+Hassan Granites Ltd,9148099001,Cement,Hassan,Bengaluru,28.0,Trailer,2026-10-07,44000.0,Posted
+Bengaluru Garment Exports,9900011223,Textiles,Bengaluru,Hubballi,12.0,Truck,2026-10-02,28000.0,Posted
+Belagavi Heavy Castings,9900022334,Steel,Belagavi,Shivamogga,14.5,Truck,2026-10-05,27000.0,Posted
+Shivamogga Paper Mills,9900033445,Textiles,Shivamogga,Mangaluru,9.0,Truck,2026-10-03,19000.0,Posted
+Hubballi Seed Supplies,9900044556,Food Grains,Hubballi,Belagavi,3.0,Pickup,2026-10-09,8000.0,Posted
+Mangaluru Refinery Pipes,9900055667,Steel,Mangaluru,Hubballi,26.0,Trailer,2026-10-04,48000.0,Posted
+Bengaluru Computer Hardware,9900066778,Electronics,Bengaluru,Mangaluru,2.5,Pickup,2026-10-01,10500.0,Posted
+Mysuru Sandal Artifacts,9900077889,Furniture,Mysuru,Udupi,3.8,Mini Truck,2026-10-06,13500.0,Posted
+Udupi Coastal Masonry,9900088990,Cement,Udupi,Belagavi,15.0,Truck,2026-10-08,31000.0,Posted
+Hassan Coffee Planters,9900099001,Food Grains,Hassan,Mysuru,7.5,Truck,2026-10-02,15000.0,Posted
+Belagavi Aluminum Extrusions,9844011223,Steel,Belagavi,Bengaluru,19.5,Truck,2026-10-05,39000.0,Posted
+Hubballi Railway Spares,9844022334,Steel,Hubballi,Mysuru,22.0,Trailer,2026-10-07,41000.0,Posted
+Shivamogga Areca Merchants,9844033445,Food Grains,Shivamogga,Udupi,4.2,Mini Truck,2026-10-03,12500.0,Posted
+Mangaluru Port Fertilizer,9844044556,Chemicals,Mangaluru,Belagavi,16.0,Truck,2026-10-06,34000.0,Posted
+Bengaluru Automotive Assemblies,9844055667,Machinery,Bengaluru,Shivamogga,11.0,Truck,2026-10-04,25000.0,Posted
+Mysuru Printing Inks,9844066778,Chemicals,Mysuru,Hubballi,3.0,Pickup,2026-10-08,11500.0,Posted
+Udupi Marine Exports,9844077889,Food Grains,Udupi,Hassan,6.0,Truck,2026-10-02,16000.0,Posted
+Hassan Coconut Traders,9844088990,Food Grains,Hassan,Hubballi,13.0,Truck,2026-10-05,23000.0,Posted
+Belagavi Precision Pumps,9844099001,Machinery,Belagavi,Mysuru,8.5,Truck,2026-10-07,26000.0,Posted
+Hubballi Electricals,9740011223,Electronics,Hubballi,Hassan,2.2,Pickup,2026-10-03,9500.0,Posted
+Shivamogga Timber Crafts,9740022334,Furniture,Shivamogga,Belagavi,5.5,Mini Truck,2026-10-09,16500.0,Posted
+Mangaluru Bitumen Logistics,9740033445,Chemicals,Mangaluru,Bengaluru,24.0,Trailer,2026-10-04,46000.0,Posted
+Bengaluru Server Racks,9740044556,Electronics,Bengaluru,Udupi,4.0,Mini Truck,2026-10-02,15500.0,Posted
+Mysuru Ayurvedic Formulations,9740055667,Chemicals,Mysuru,Mangaluru,2.8,Pickup,2026-10-06,11000.0,Posted
+Udupi Temple Brasswares,9740066778,Machinery,Udupi,Mysuru,3.2,Mini Truck,2026-10-05,13000.0,Posted
+Hassan Potato Chips Industry,9740077889,Food Grains,Hassan,Shivamogga,7.0,Truck,2026-10-07,17500.0,Posted
+Belagavi Yarn Mills,9740088990,Textiles,Belagavi,Udupi,10.5,Truck,2026-10-03,24500.0,Posted
+Hubballi Plastic Molders,9740099001,Furniture,Hubballi,Shivamogga,6.5,Truck,2026-10-08,18000.0,Posted
+Shivamogga Ayurvedic Herbs,9631011223,Food Grains,Shivamogga,Hassan,2.5,Pickup,2026-10-04,8500.0,Posted
+Mangaluru Granite Cutters,9631022334,Cement,Mangaluru,Shivamogga,17.0,Truck,2026-10-02,27000.0,Posted
+Bengaluru Aerospace Rivets,9631033445,Machinery,Bengaluru,Belagavi,3.6,Mini Truck,2026-10-06,16000.0,Posted
+Mysuru Silk Weavers Guild,9631044556,Textiles,Mysuru,Belagavi,5.0,Mini Truck,2026-10-05,19500.0,Posted
+Udupi Power Cables,9631055667,Electronics,Udupi,Hubballi,8.0,Truck,2026-10-07,21500.0,Posted
+Hassan Cardamom Exporters,9631066778,Food Grains,Hassan,Belagavi,4.5,Mini Truck,2026-10-03,15000.0,Posted
+Belagavi Heavy Gears,9631077889,Machinery,Belagavi,Hassan,15.0,Truck,2026-10-08,29000.0,Posted
+Hubballi Agro Tractors,9631088990,Machinery,Hubballi,Mangaluru,20.0,Trailer,2026-10-04,42000.0,Posted
+Shivamogga Sand Mining,9631099001,Cement,Shivamogga,Mysuru,28.0,Trailer,2026-10-06,47000.0,Posted
+Mangaluru Cashew Processors,9631000112,Food Grains,Mangaluru,Bengaluru,11.5,Truck,2026-10-05,26000.0,Posted

@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Vehicle Management - Transport Load Booking System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold mb-1" id="vehicles_heading">Vehicle Management &amp; Registration</h2>
+        <p class="text-muted">Register commercial transport fleet vehicles, maintain capacity specifications, and track availability.</p>
+    </div>
+</div>
+
+<!-- Inline Alerts with exact IDs required for testing -->
+{% if success_message %}
+<div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert" id="vehicle_success_message">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    <span>{{ success_message }}</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+{% if error_message %}
+<div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert" id="vehicle_error_message">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <span>{{ error_message }}</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+<div class="row g-4">
+    <!-- Registration Form -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-header bg-white py-3 border-0">
+                <h5 class="fw-bold mb-0 text-primary">
+                    <i class="bi bi-plus-circle me-2"></i>Register New Vehicle
+                </h5>
+            </div>
+            <div class="card-body pt-0">
+                <form method="POST" action="{{ url_for('vehicles.list_and_register') }}" id="vehicle_registration_form" novalidate>
+                    <!-- Vehicle Number -->
+                    <div class="mb-3">
+                        <label for="vehicle_number" class="form-label fw-semibold">Vehicle Number <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control text-uppercase" id="vehicle_number" name="vehicle_number" placeholder="e.g. KA19AB1234" required>
+                        <div class="form-text small">Indian format: State code (2) + District (2) + Series (1-2) + Number (4).</div>
+                    </div>
+
+                    <!-- Vehicle Type -->
+                    <div class="mb-3">
+                        <label for="vehicle_type" class="form-label fw-semibold">Vehicle Type <span class="text-danger">*</span></label>
+                        <select class="form-select" id="vehicle_type" name="vehicle_type" required>
+                            <option value="" disabled selected>-- Select Vehicle Type --</option>
+                            <option value="Truck">Truck</option>
+                            <option value="Mini Truck">Mini Truck</option>
+                            <option value="Trailer">Trailer</option>
+                            <option value="Pickup">Pickup</option>
+                        </select>
+                    </div>
+
+                    <!-- Capacity in Tonnes -->
+                    <div class="mb-3">
+                        <label for="vehicle_capacity" class="form-label fw-semibold">Capacity (in tonnes) <span class="text-danger">*</span></label>
+                        <input type="number" step="0.1" min="0.1" class="form-control" id="vehicle_capacity" name="capacity" placeholder="e.g. 15.5" required>
+                        <div class="form-text small">Must be strictly greater than 0.</div>
+                    </div>
+
+                    <!-- Owner Name -->
+                    <div class="mb-3">
+                        <label for="owner_name" class="form-label fw-semibold">Owner / Operator Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="owner_name" name="owner_name" placeholder="e.g. Ramesh Logistics" required>
+                    </div>
+
+                    <!-- Registration Date -->
+                    <div class="mb-3">
+                        <label for="registration_date" class="form-label fw-semibold">Registration Date <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="registration_date" name="registration_date" required>
+                    </div>
+
+                    <!-- Availability Status -->
+                    <div class="mb-4">
+                        <label for="vehicle_availability_status" class="form-label fw-semibold">Availability Status <span class="text-danger">*</span></label>
+                        <select class="form-select" id="vehicle_availability_status" name="availability_status" required>
+                            <option value="Available" selected>Available</option>
+                            <option value="Unavailable">Unavailable</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold" id="register_vehicle_button">
+                        <i class="bi bi-check-lg me-1"></i>Register Vehicle
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vehicles List Table -->
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0 text-dark">
+                    <i class="bi bi-card-list me-2 text-primary"></i>Registered Commercial Vehicles
+                </h5>
+                <span class="badge bg-primary rounded-pill px-3 py-2" id="vehicles_total_badge">{{ vehicles|length }} Vehicles</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="vehicles_table">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Vehicle Number</th>
+                            <th>Type</th>
+                            <th>Capacity</th>
+                            <th>Owner</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if vehicles %}
+                            {% for v in vehicles %}
+                                <tr id="vehicle_row_{{ v.id }}">
+                                    <td>{{ loop.index }}</td>
+                                    <td class="fw-bold text-primary" id="vehicle_num_{{ v.id }}">{{ v.vehicle_number }}</td>
+                                    <td>{{ v.vehicle_type }}</td>
+                                    <td>{{ v.capacity }} Tonnes</td>
+                                    <td>{{ v.owner_name }}</td>
+                                    <td>
+                                        <span class="badge {% if v.availability_status == 'Available' %}bg-success{% else %}bg-secondary{% endif %}" id="vehicle_status_{{ v.id }}">
+                                            {{ v.availability_status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{{ url_for('vehicles.edit', id=v.id) }}" class="btn btn-outline-secondary" id="edit_vehicle_{{ v.id }}">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <form method="POST" action="{{ url_for('vehicles.delete', id=v.id) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete vehicle {{ v.vehicle_number }}?');">
+                                                <button type="submit" class="btn btn-outline-danger" id="delete_vehicle_{{ v.id }}">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr id="empty_vehicles_row">
+                                <td colspan="7" class="text-center py-4 text-muted">No vehicles registered yet. Use the form to register a vehicle.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

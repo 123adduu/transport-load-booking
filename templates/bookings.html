@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}All Bookings - Transport Load Booking System{% endblock %}
+
+{% block content %}
+<div class="row mb-4 align-items-center">
+    <div class="col-md-8">
+        <h2 class="fw-bold mb-1" id="bookings_heading">Transport Bookings Registry</h2>
+        <p class="text-muted mb-0">Complete list of confirmed freight assignments and dispatch bookings.</p>
+    </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="{{ url_for('assignments.assign') }}" class="btn btn-primary shadow-sm" id="btn_new_assignment">
+            <i class="bi bi-plus-circle me-1"></i>New Booking Assignment
+        </a>
+    </div>
+</div>
+
+<!-- Status Filter Tabs -->
+<div class="mb-4">
+    <ul class="nav nav-pills" id="booking_status_filters">
+        <li class="nav-item">
+            <a class="nav-link {% if not current_filter %}active{% endif %}" href="{{ url_for('bookings.list_bookings') }}" id="filter_all_bookings">
+                All Bookings
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if current_filter == 'Confirmed' %}active{% endif %}" href="{{ url_for('bookings.list_bookings', status='Confirmed') }}" id="filter_confirmed_bookings">
+                Confirmed
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if current_filter == 'Cancelled' %}active{% endif %}" href="{{ url_for('bookings.list_bookings', status='Cancelled') }}" id="filter_cancelled_bookings">
+                Cancelled
+            </a>
+        </li>
+    </ul>
+</div>
+
+<!-- Bookings Table Card -->
+<div class="card border-0 shadow-sm rounded-3">
+    <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold mb-0 text-dark">
+            <i class="bi bi-calendar-check me-2 text-primary"></i>All Recorded Bookings
+        </h5>
+        <span class="badge bg-primary rounded-pill px-3 py-2" id="bookings_total_badge">{{ bookings|length }} Bookings</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" id="bookings_table">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Booking ID</th>
+                    <th>Customer Name</th>
+                    <th>Route</th>
+                    <th>Vehicle</th>
+                    <th>Driver</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if bookings %}
+                    {% for b in bookings %}
+                        <tr id="booking_row_{{ b.id }}">
+                            <td>{{ loop.index }}</td>
+                            <td class="fw-bold text-primary" id="booking_code_{{ b.id }}">{{ b.booking_id }}</td>
+                            <td id="booking_cust_{{ b.id }}">{{ b.load.customer_name if b.load else 'N/A' }}</td>
+                            <td>
+                                {% if b.load %}
+                                    <small>{{ b.load.pickup_location }} &rarr; {{ b.load.destination }}</small>
+                                {% else %}
+                                    <span class="text-muted">N/A</span>
+                                {% endif %}
+                            </td>
+                            <td id="booking_veh_{{ b.id }}">
+                                {% if b.vehicle %}
+                                    <span class="badge bg-light text-dark border">{{ b.vehicle.vehicle_number }}</span>
+                                {% else %}
+                                    <span class="text-muted">N/A</span>
+                                {% endif %}
+                            </td>
+                            <td id="booking_drv_{{ b.id }}">{{ b.driver.driver_name if b.driver else 'N/A' }}</td>
+                            <td><small class="text-muted">{{ b.booking_date.strftime('%Y-%m-%d %H:%M') }}</small></td>
+                            <td>
+                                <span class="badge {% if b.status == 'Confirmed' %}bg-success{% else %}bg-danger{% endif %}" id="booking_status_{{ b.id }}">
+                                    {{ b.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ url_for('bookings.booking_detail', booking_id=b.booking_id) }}" class="btn btn-outline-primary" id="view_booking_{{ b.id }}">
+                                        <i class="bi bi-eye"></i> View
+                                    </a>
+                                    {% if b.status == 'Confirmed' %}
+                                        <form method="POST" action="{{ url_for('bookings.cancel_booking', id=b.id) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to cancel booking {{ b.booking_id }}?');">
+                                            <button type="submit" class="btn btn-outline-danger" id="cancel_booking_{{ b.id }}">
+                                                <i class="bi bi-x-circle"></i> Cancel
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr id="empty_bookings_row">
+                        <td colspan="9" class="text-center py-4 text-muted">No bookings recorded yet. Use the Assignment module to book a load.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

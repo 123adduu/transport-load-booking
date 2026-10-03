@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Vehicle - Transport Load Booking System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-header bg-white py-3 border-0">
+                <h5 class="fw-bold mb-0 text-primary">
+                    <i class="bi bi-pencil-square me-2"></i>Edit Vehicle: {{ vehicle.vehicle_number }}
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if error_message %}
+                <div class="alert alert-danger" id="edit_vehicle_error_message">
+                    {{ error_message }}
+                </div>
+                {% endif %}
+
+                <form method="POST" action="{{ url_for('vehicles.edit', id=vehicle.id) }}">
+                    <div class="mb-3">
+                        <label for="edit_vehicle_number" class="form-label fw-semibold">Vehicle Number</label>
+                        <input type="text" class="form-control text-uppercase" id="edit_vehicle_number" name="vehicle_number" value="{{ vehicle.vehicle_number }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_vehicle_type" class="form-label fw-semibold">Vehicle Type</label>
+                        <select class="form-select" id="edit_vehicle_type" name="vehicle_type" required>
+                            <option value="Truck" {% if vehicle.vehicle_type == 'Truck' %}selected{% endif %}>Truck</option>
+                            <option value="Mini Truck" {% if vehicle.vehicle_type == 'Mini Truck' %}selected{% endif %}>Mini Truck</option>
+                            <option value="Trailer" {% if vehicle.vehicle_type == 'Trailer' %}selected{% endif %}>Trailer</option>
+                            <option value="Pickup" {% if vehicle.vehicle_type == 'Pickup' %}selected{% endif %}>Pickup</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_vehicle_capacity" class="form-label fw-semibold">Capacity (in tonnes)</label>
+                        <input type="number" step="0.1" min="0.1" class="form-control" id="edit_vehicle_capacity" name="capacity" value="{{ vehicle.capacity }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_owner_name" class="form-label fw-semibold">Owner Name</label>
+                        <input type="text" class="form-control" id="edit_owner_name" name="owner_name" value="{{ vehicle.owner_name }}" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="edit_vehicle_availability_status" class="form-label fw-semibold">Availability Status</label>
+                        <select class="form-select" id="edit_vehicle_availability_status" name="availability_status" required>
+                            <option value="Available" {% if vehicle.availability_status == 'Available' %}selected{% endif %}>Available</option>
+                            <option value="Unavailable" {% if vehicle.availability_status == 'Unavailable' %}selected{% endif %}>Unavailable</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('vehicles.list_and_register') }}" class="btn btn-outline-secondary" id="btn_cancel_edit_vehicle">Cancel</a>
+                        <button type="submit" class="btn btn-primary" id="btn_save_vehicle">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
